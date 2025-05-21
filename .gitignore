@@ -1,2 +1,3 @@
 data/
-instructions/ 
+instructions/
+__pycache__/
