@@ -1,6 +1,7 @@
 import json
 import csv
 import logging
+import time
 from pathlib import Path
 from kafka import KafkaProducer
 
@@ -36,6 +37,7 @@ def process_csv_and_send_to_kafka():
     config = load_config()
     producer = create_kafka_producer(config['kafka']['bootstrap_servers'])
     topic = config['kafka']['topics']['raw_sensor_data']
+    delay = config['kafka']['message_delay_seconds']
     
     csv_path = Path(__file__).parent / 'sensor_data.csv'
     try:
@@ -52,6 +54,7 @@ def process_csv_and_send_to_kafka():
                     }
                     producer.send(topic, value=data)
                     logger.info(f"Sent data: {data}")
+                    time.sleep(delay)
                 except Exception as e:
                     logger.error(f"Failed to send message: {e}")
                     continue

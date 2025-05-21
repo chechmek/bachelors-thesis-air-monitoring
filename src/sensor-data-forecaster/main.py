@@ -45,6 +45,7 @@ def main():
         
         data_buffer = deque(maxlen=LOOK_BACK)
         latest_datetime = None
+        last_forecast_hour = None
         
         logger.info("Starting sensor data forecaster...")
         
@@ -53,33 +54,36 @@ def main():
                 data = message.value
                 pm2_5 = data['pm2_5']
                 datetime_str = data['datetime']
+                current_datetime = datetime.fromisoformat(datetime_str)
                 
                 data_buffer.append(pm2_5)
                 latest_datetime = datetime_str
                 
                 if len(data_buffer) == LOOK_BACK:
-                    predictions = predict_pm2_5(list(data_buffer), model, scaler)
-                    forecast_value = predictions[-1]
+                    current_hour = current_datetime.replace(minute=0, second=0, microsecond=0)
                     
-                    date_forecasted = datetime.fromisoformat(latest_datetime)
-                    date_target = date_forecasted + timedelta(hours=1)
-                    
-                    forecast_payload = {
-                        "date_forecasted": date_forecasted.isoformat(),
-                        "date_target": date_target.isoformat(),
-                        "pm2_5": float(forecast_value)
-                    }
-                    
-                    producer.send(
-                        config['kafka']['topics']['forecast'],
-                        value=forecast_payload
-                    )
-                    
-                    save_forecast(db_conn, date_forecasted, date_target, float(forecast_value))
-                    
-                    logger.info(f"Made forecast for {date_target.isoformat()}: {forecast_value}")
-                    
-                    data_buffer.clear()
+                    if last_forecast_hour is None or current_hour > last_forecast_hour:
+                        predictions = predict_pm2_5(list(data_buffer), model, scaler)
+                        forecast_value = predictions[-1]
+                        
+                        date_forecasted = current_datetime
+                        date_target = date_forecasted + timedelta(hours=1)
+                        
+                        forecast_payload = {
+                            "date_forecasted": date_forecasted.isoformat(),
+                            "date_target": date_target.isoformat(),
+                            "pm2_5": float(forecast_value)
+                        }
+                        
+                        producer.send(
+                            config['kafka']['topics']['forecast'],
+                            value=forecast_payload
+                        )
+                        
+                        save_forecast(db_conn, date_forecasted, date_target, float(forecast_value))
+                        
+                        logger.info(f"Made forecast for {date_target.isoformat()}: {forecast_value}")
+                        last_forecast_hour = current_hour
             
             except Exception as e:
                 logger.error(f"Error processing message: {str(e)}")

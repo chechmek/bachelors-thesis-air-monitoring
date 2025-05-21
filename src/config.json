@@ -5,7 +5,8 @@
       "raw_sensor_data": "in",
       "forecast": "forecast",
       "metrics": "metrics"
-    }
+    },
+    "message_delay_seconds": 0.05
   },
   "postgresql": {
     "host": "localhost",
