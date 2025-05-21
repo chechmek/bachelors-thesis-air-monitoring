@@ -18,25 +18,25 @@ def load_config():
         logger.error(f"Error decoding JSON from {config_path}")
         raise
 
-def create_forecast_table():
-    conn = None
+def get_db_connection(config):
+    pg_config = config.get('postgresql')
+    if not pg_config:
+        logger.error("PostgreSQL configuration not found in config.json")
+        raise ValueError("PostgreSQL configuration not found in config.json")
+
+    logger.info(f"Connecting to PostgreSQL database '{pg_config.get('database_name')}' on {pg_config.get('host')}:{pg_config.get('port')}...")
+    conn = psycopg2.connect(
+        host=pg_config.get('host'),
+        port=pg_config.get('port'),
+        user=pg_config.get('user'),
+        password=pg_config.get('password'),
+        database=pg_config.get('database_name')
+    )
+    logger.info("Successfully connected to PostgreSQL.")
+    return conn
+
+def create_forecast_table(conn):
     try:
-        config = load_config()
-        pg_config = config.get('postgresql')
-        if not pg_config:
-            logger.error("PostgreSQL configuration not found in config.json")
-            return
-
-        logger.info(f"Connecting to PostgreSQL database '{pg_config.get('database_name')}' on {pg_config.get('host')}:{pg_config.get('port')}...")
-        conn = psycopg2.connect(
-            host=pg_config.get('host'),
-            port=pg_config.get('port'),
-            user=pg_config.get('user'),
-            password=pg_config.get('password'),
-            database=pg_config.get('database_name')
-        )
-        logger.info("Successfully connected to PostgreSQL.")
-
         with conn.cursor() as cur:
             create_table_query = """
             CREATE TABLE IF NOT EXISTS forecast (
@@ -49,17 +49,49 @@ def create_forecast_table():
             cur.execute(create_table_query)
             conn.commit()
             logger.info("Table 'forecast' ensured to exist successfully.")
-
     except psycopg2.Error as e:
-        logger.error(f"PostgreSQL error: {e}")
-        if conn:
-            conn.rollback()
+        logger.error(f"PostgreSQL error while creating forecast table: {e}")
+        conn.rollback()
+        raise
+
+def create_metrics_table(conn):
+    try:
+        with conn.cursor() as cur:
+            create_table_query = """
+            CREATE TABLE IF NOT EXISTS hourly_sensor_metrics (
+                id SERIAL PRIMARY KEY,
+                window_end_time TIMESTAMP WITHOUT TIME ZONE,
+                avg_temp REAL,
+                avg_humidity REAL,
+                avg_pm2_5 REAL,
+                aqi INTEGER
+            );
+            """
+            cur.execute(create_table_query)
+            conn.commit()
+            logger.info("Table 'hourly_sensor_metrics' ensured to exist successfully.")
+    except psycopg2.Error as e:
+        logger.error(f"PostgreSQL error while creating metrics table: {e}")
+        conn.rollback()
+        raise
+
+def init_database():
+    conn = None
+    try:
+        config = load_config()
+        conn = get_db_connection(config)
+        
+        create_forecast_table(conn)
+        create_metrics_table(conn)
+        
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
+        if conn:
+            conn.rollback()
     finally:
         if conn:
             conn.close()
             logger.info("PostgreSQL connection closed.")
 
 if __name__ == "__main__":
-    create_forecast_table()
+    init_database()
