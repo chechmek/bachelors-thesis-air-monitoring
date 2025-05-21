@@ -65,6 +65,7 @@ def main():
                     if last_forecast_hour is None or current_hour > last_forecast_hour:
                         predictions = predict_pm2_5(list(data_buffer), model, scaler)
                         forecast_value = predictions[-1]
+                        last_input_value = data_buffer[-1]
                         
                         date_forecasted = current_datetime
                         date_target = date_forecasted + timedelta(hours=1)
@@ -72,7 +73,8 @@ def main():
                         forecast_payload = {
                             "date_forecasted": date_forecasted.isoformat(),
                             "date_target": date_target.isoformat(),
-                            "pm2_5": float(forecast_value)
+                            "pm2_5_last": float(last_input_value),
+                            "pm2_5_forecasted": float(forecast_value)
                         }
                         
                         producer.send(
@@ -80,7 +82,14 @@ def main():
                             value=forecast_payload
                         )
                         
-                        save_forecast(db_conn, date_forecasted, date_target, float(forecast_value))
+                        save_forecast(
+                            db_conn, 
+                            date_forecasted, 
+                            date_target, 
+                            list(data_buffer), 
+                            predictions.tolist(), 
+                            float(forecast_value)
+                        )
                         
                         logger.info(f"Made forecast for {date_target.isoformat()}: {forecast_value}")
                         last_forecast_hour = current_hour

@@ -16,16 +16,16 @@ def get_db_connection(config):
         logging.error(f"Failed to connect to database: {str(e)}")
         raise
 
-def save_forecast(conn, date_forecasted, date_target, pm2_5_value):
+def save_forecast(conn, date_forecasted, date_target, input_sequence, predicted_sequence, pm2_5_value):
     try:
         with conn.cursor() as cur:
             cur.execute(
                 """
-                INSERT INTO forecast (date_forecasted, date_target, pm2_5)
-                VALUES (%s, %s, %s)
+                INSERT INTO forecast (date_forecasted, date_target, input_sequence, predicted_sequence, pm2_5)
+                VALUES (%s, %s, %s, %s, %s)
                 RETURNING id
                 """,
-                (date_forecasted, date_target, pm2_5_value)
+                (date_forecasted, date_target, input_sequence, predicted_sequence, pm2_5_value)
             )
             forecast_id = cur.fetchone()[0]
             conn.commit()

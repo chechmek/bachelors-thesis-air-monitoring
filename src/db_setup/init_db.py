@@ -43,6 +43,8 @@ def create_forecast_table(conn):
                 id SERIAL PRIMARY KEY,
                 date_forecasted TIMESTAMP WITHOUT TIME ZONE,
                 date_target TIMESTAMP WITHOUT TIME ZONE,
+                input_sequence REAL[],
+                predicted_sequence REAL[],
                 pm2_5 REAL
             );
             """
