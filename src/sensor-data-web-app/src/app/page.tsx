@@ -55,29 +55,46 @@ const Home: NextPage = () => {
 
   const chartData = {
     labels: forecast ? [
-      ...forecast.input_sequence.slice(-24).map((_: number, i: number) => `-${24 - i}m`),
-      ...forecast.predicted_sequence.map((_: number, i: number) => `+${i + 1}h`)
+      ...forecast.input_sequence.slice(-24).map((_, i) => `-${24 - i}m`),
+      ...forecast.predicted_sequence.map((_, i) => `+${i + 1}h`)
     ] : [],
     datasets: [
       {
-        label: 'Input Sequence',
-        data: forecast ? forecast.input_sequence.slice(-24) : [],
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        fill: true
-      },
-      {
-        label: 'Predicted Sequence',
-        data: forecast ? forecast.predicted_sequence : [],
-        borderColor: '#eab308',
-        backgroundColor: 'rgba(234, 179, 8, 0.1)',
-        fill: true
+        label: 'PM2.5',
+        data: forecast ? [
+          ...forecast.input_sequence.slice(-24),
+          ...forecast.predicted_sequence
+        ] : [],
+        borderWidth: 2,
+        fill: false,
+        pointBackgroundColor: (ctx) => {
+          const index = ctx.dataIndex
+          return index < 24 ? '#3b82f6' : '#eab308'
+        },
+        pointBorderColor: (ctx) => {
+          const index = ctx.dataIndex
+          return index < 24 ? '#3b82f6' : '#eab308'
+        },
+        segment: {
+          borderColor: (ctx) => {
+            const index = ctx.p0DataIndex
+            return index < 24 ? '#3b82f6' : '#eab308'
+          }
+        }
       }
     ]
   }
 
+  console.log('Chart Data:', {
+    labels: chartData.labels,
+    data: chartData.datasets[0].data,
+    inputLength: forecast?.input_sequence.length,
+    predictedLength: forecast?.predicted_sequence.length
+  })
+
   const chartOptions: ChartOptions<'line'> = {
     responsive: true,
+    spanGaps: true,
     plugins: {
       zoom: {
         zoom: {
@@ -99,7 +116,9 @@ const Home: NextPage = () => {
           label: (context) => {
             const label = context.dataset.label || ''
             const value = context.parsed.y
-            return `${label}: ${value.toFixed(2)}`
+            const index = context.dataIndex
+            const type = index < 24 ? 'Input' : 'Predicted'
+            return `${type} ${label}: ${value.toFixed(2)}`
           }
         }
       }
