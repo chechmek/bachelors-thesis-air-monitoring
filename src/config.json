@@ -6,7 +6,7 @@
       "forecast": "forecast",
       "metrics": "metrics"
     },
-    "message_delay_seconds": 0.01
+    "message_delay_seconds": 0
   },
   "postgresql": {
     "host": "localhost",

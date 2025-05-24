@@ -19,7 +19,7 @@ export async function getLatestMetrics(): Promise<HourlySensorMetrics> {
 
 export async function getHistoricalMetrics(): Promise<HourlySensorMetrics[]> {
   const result = await pool.query(
-    'SELECT * FROM hourly_sensor_metrics ORDER BY window_end_time DESC LIMIT 100'
+    'SELECT * FROM hourly_sensor_metrics ORDER BY window_end_time DESC'
   )
   return result.rows
 } 

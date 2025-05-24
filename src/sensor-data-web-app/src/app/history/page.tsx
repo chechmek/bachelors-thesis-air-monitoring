@@ -115,6 +115,7 @@ export default function History() {
       fill: true
     }]
   }
+  console.log('AQI data points:', aqiData.datasets[0].data.length)
 
   const pm25Data = {
     labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
@@ -126,6 +127,7 @@ export default function History() {
       fill: true
     }]
   }
+  console.log('PM2.5 data points:', pm25Data.datasets[0].data.length)
 
   const tempData = {
     labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
@@ -137,6 +139,7 @@ export default function History() {
       fill: true
     }]
   }
+  console.log('Temperature data points:', tempData.datasets[0].data.length)
 
   const humidityData = {
     labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
@@ -148,6 +151,7 @@ export default function History() {
       fill: true
     }]
   }
+  console.log('Humidity data points:', humidityData.datasets[0].data.length)
 
   return (
     <main className="min-h-screen p-8 bg-gray-50">
