@@ -33,8 +33,16 @@ interface ForecastGraphProps {
 export default function ForecastGraph({ forecast, loading, onRefetch }: ForecastGraphProps) {
   const chartData = {
     labels: forecast ? [
-      ...forecast.input_sequence.slice(-24).map((_, i) => `-${24 - i}m`),
-      ...forecast.predicted_sequence.map((_, i) => `+${i + 1}h`)
+      ...forecast.input_sequence.slice(-24).map((_, i) => {
+        if (i === 0) return '2 hours ago'
+        if (i === 12) return '1 hour ago'
+        return ''
+      }),
+      ...forecast.predicted_sequence.map((_, i) => {
+        if (i === 0) return 'current'
+        if (i === 10) return '1 hour forecast'
+        return ''
+      })
     ] : [],
     datasets: [
       {
@@ -45,16 +53,16 @@ export default function ForecastGraph({ forecast, loading, onRefetch }: Forecast
         ] : [],
         borderWidth: 2,
         fill: false,
-        pointBackgroundColor: (ctx) => {
+        pointBackgroundColor: (ctx: { dataIndex: number }) => {
           const index = ctx.dataIndex
           return index < 24 ? '#3b82f6' : '#eab308'
         },
-        pointBorderColor: (ctx) => {
+        pointBorderColor: (ctx: { dataIndex: number }) => {
           const index = ctx.dataIndex
           return index < 24 ? '#3b82f6' : '#eab308'
         },
         segment: {
-          borderColor: (ctx) => {
+          borderColor: (ctx: { p0DataIndex: number }) => {
             const index = ctx.p0DataIndex
             return index < 24 ? '#3b82f6' : '#eab308'
           }
@@ -62,6 +70,8 @@ export default function ForecastGraph({ forecast, loading, onRefetch }: Forecast
       }
     ]
   }
+
+  console.log('Chart data:', chartData) 
 
   const chartOptions: ChartOptions<'line'> = {
     responsive: true,
