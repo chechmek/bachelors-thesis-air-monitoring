@@ -97,5 +97,6 @@ if __name__ == "__main__":
 
         alert = create_alert_message(data)
         if alert:
+            print(alert)
             with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'alert.txt'), 'w', encoding='utf-8') as f:
                 f.write(alert)
