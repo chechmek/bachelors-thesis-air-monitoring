@@ -2,6 +2,7 @@ import json
 import csv
 import logging
 import time
+import argparse
 from pathlib import Path
 from kafka import KafkaProducer
 
@@ -33,13 +34,13 @@ def create_kafka_producer(bootstrap_servers):
         logger.error(f"Failed to create Kafka producer: {e}")
         raise
 
-def process_csv_and_send_to_kafka():
+def process_csv_and_send_to_kafka(filename='sensor_data.csv'):
     config = load_config()
     producer = create_kafka_producer(config['kafka']['bootstrap_servers'])
     topic = config['kafka']['topics']['raw_sensor_data']
     delay = config['kafka']['message_delay_seconds']
     
-    csv_path = Path(__file__).parent / 'sensor_data.csv'
+    csv_path = Path(__file__).parent / filename
     try:
         with open(csv_path, 'r') as f:
             reader = csv.DictReader(f)
@@ -69,8 +70,12 @@ def process_csv_and_send_to_kafka():
         producer.close()
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Process sensor data CSV and send to Kafka')
+    parser.add_argument('--filename', default='sensor_data.csv', help='CSV file to process (default: sensor_data.csv)')
+    args = parser.parse_args()
+    
     try:
-        process_csv_and_send_to_kafka()
+        process_csv_and_send_to_kafka(args.filename)
         logger.info("Data processing completed successfully")
     except Exception as e:
         logger.error(f"Script failed: {e}") 
