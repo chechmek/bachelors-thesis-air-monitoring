@@ -1,0 +1,7 @@
+🚨 **Air Quality Alert** 🚨
+🕒 Time: 2020-08-13T14:50:00
+
+😷 AQI: 153.00 (Unhealthy) - Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.
+💨 PM2.5: 59.20 µg/m³ - Levels are unhealthy.
+🌡️ Temperature: 27.7°C - Warm and sunny. Enjoy the outdoors! ☀️
+💧 Humidity: 54.3% - Comfortable humidity levels. 😊
