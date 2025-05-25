@@ -106,10 +106,10 @@ export default function History() {
   }, [])
 
   const aqiData = {
-    labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
+    labels: [...metrics].reverse().map(m => new Date(m.window_end_time).toLocaleString()),
     datasets: [{
       label: 'AQI',
-      data: metrics.map(m => m.aqi),
+      data: [...metrics].reverse().map(m => m.aqi),
       borderColor: '#22c55e',
       backgroundColor: 'rgba(34, 197, 94, 0.1)',
       fill: true
@@ -118,10 +118,10 @@ export default function History() {
   console.log('AQI data points:', aqiData.datasets[0].data.length)
 
   const pm25Data = {
-    labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
+    labels: [...metrics].reverse().map(m => new Date(m.window_end_time).toLocaleString()),
     datasets: [{
       label: 'PM2.5',
-      data: metrics.map(m => m.avg_pm2_5),
+      data: [...metrics].reverse().map(m => m.avg_pm2_5),
       borderColor: '#3b82f6',
       backgroundColor: 'rgba(59, 130, 246, 0.1)',
       fill: true
@@ -130,10 +130,10 @@ export default function History() {
   console.log('PM2.5 data points:', pm25Data.datasets[0].data.length)
 
   const tempData = {
-    labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
+    labels: [...metrics].reverse().map(m => new Date(m.window_end_time).toLocaleString()),
     datasets: [{
       label: 'Temperature (°C)',
-      data: metrics.map(m => m.avg_temp),
+      data: [...metrics].reverse().map(m => m.avg_temp),
       borderColor: '#ef4444',
       backgroundColor: 'rgba(239, 68, 68, 0.1)',
       fill: true
@@ -142,10 +142,10 @@ export default function History() {
   console.log('Temperature data points:', tempData.datasets[0].data.length)
 
   const humidityData = {
-    labels: metrics.map(m => new Date(m.window_end_time).toLocaleString()),
+    labels: [...metrics].reverse().map(m => new Date(m.window_end_time).toLocaleString()),
     datasets: [{
       label: 'Humidity (%)',
-      data: metrics.map(m => m.avg_humidity),
+      data: [...metrics].reverse().map(m => m.avg_humidity),
       borderColor: '#a855f7',
       backgroundColor: 'rgba(168, 85, 247, 0.1)',
       fill: true
