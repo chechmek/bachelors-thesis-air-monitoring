@@ -1,6 +1,6 @@
 # Sensor Data Analysis System
 
-This project implements a comprehensive system for sensor data analysis, forecasting, and anomaly detection using a microservices architecture. The system processes telemetry data in real-time, provides predictions, and notifies users about anomalies through a web interface.
+Real-time air quality monitoring system for my Bachelor’s thesis at Kyiv Polytechnic Institute. Includes sensor data collection, Kafka-based streaming, anomaly detection, and a web interface for visualization and forecasting.
 
 ## System Architecture
 
