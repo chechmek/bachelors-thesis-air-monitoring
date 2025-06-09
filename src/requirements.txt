@@ -1,0 +1,6 @@
+psycopg2>=2.9.0
+kafka-python>=2.0.0
+tensorflow>=2.0.0
+numpy>=1.19.0
+joblib>=1.0.0
+python-json-logger>=2.0.0 
