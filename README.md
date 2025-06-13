@@ -1,6 +1,16 @@
 # Sensor Data Analysis System
 
-Real-time air quality monitoring system for my Bachelor’s thesis at Kyiv Polytechnic Institute. Includes sensor data collection, Kafka-based streaming, anomaly detection, and a web interface for visualization and forecasting.
+Real-time air quality monitoring system for my Bachelor's thesis at Kyiv Polytechnic Institute. Includes sensor data collection, Kafka-based streaming, anomaly detection, and a web interface for visualization and forecasting.
+
+## Showcase
+
+Main page with forecast and current metrics:
+
+![Live Forecast](img/live-forecast.png)
+
+History page with historical data gathered for all time:
+
+![History](img/history.png)
 
 ## System Architecture
 
@@ -83,6 +93,12 @@ Available sample data files:
 - `sensor_data_50k.csv` - 50,000 records
 - `sensor_data_100k.csv` - 100,000 records
 - `sensor_data_all_100k.csv` - Complete dataset with approximatly 100,000 records
+
+Below are graphs for PM2.5, humidity, and temperature values in `sensor_data_all_100k.csv`:
+
+![Data Overview](img/data.png)
+
+The data is based on the Kaggle repository [Environmental Sensor Telemetry Data](https://www.kaggle.com/datasets/garystafford/environmental-sensor-data-132k/data) but was strongly modified for this project.
 
 The system behavior can be configured through `src/config.json`:
 ```json
