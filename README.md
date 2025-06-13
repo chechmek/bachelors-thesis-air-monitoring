@@ -148,3 +148,15 @@ The system uses:
 - Ensure all Docker containers are healthy before proceeding with the application startup
 - The system is designed to process real-time sensor data but can also work with historical data for testing
 - All components are containerized for consistent deployment across different environments 
+
+## Thesis and Diagrams
+
+The official language of the thesis project is Ukrainian. English translations are provided for reference.
+
+**English:**
+- [Bachelor's Thesis EN (DeepL Translated).pdf](Bachelor's%20Thesis%20EN%20(DeepL%20Translated).pdf) (thesis, DeepL translated)
+- [Bachelor's Thesis Diagrams EN (DeepL Translated).pdf](Bachelor's%20Thesis%20Diagrams%20EN%20(DeepL%20Translated).pdf) (diagrams, DeepL translated)
+
+**Ukrainian (official):**
+- [Bachelor's Thesis UA.pdf](Bachelor's%20Thesis%20UA.pdf) (thesis)
+- [Bachelor's Thesis Diagrams UA.pdf](Bachelor's%20Thesis%20Diagrams%20UA.pdf) (diagrams) 
